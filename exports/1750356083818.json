@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750356083818,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_DeleteConfirmationModal",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/vitereact/src/components/views/GV_DeleteConfirmationModal.tsx",
+      "type": "text",
+      "size": 3436,
+      "dependencies": false
+    }
+  ]
+}

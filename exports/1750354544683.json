@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750354544683,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_Header",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/vitereact/src/components/views/GV_Header.tsx",
+      "type": "text",
+      "size": 6284,
+      "dependencies": false
+    }
+  ]
+}

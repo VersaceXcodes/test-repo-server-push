@@ -1,0 +1,15 @@
+{
+  "timestamp": 1750352993455,
+  "operation": {
+    "id": "db:schemas:zod"
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/backend/schema.ts",
+      "type": "text",
+      "size": 10329,
+      "dependencies": false
+    }
+  ]
+}

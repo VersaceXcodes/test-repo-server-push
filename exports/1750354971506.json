@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750354971506,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Registration",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/vitereact/src/components/views/UV_Registration.tsx",
+      "type": "text",
+      "size": 5174,
+      "dependencies": false
+    }
+  ]
+}

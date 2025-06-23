@@ -1,0 +1,658 @@
+openapi: 3.0.0
+info:
+  title: Real Estate Properties Management API
+  version: 1.0.0
+  description: REST API for managing properties, user authentication, media
+    uploads, and dashboard metrics for a Real Estate Properties Management Web
+    Application.
+servers:
+  - url: http://localhost:3000
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate user and return JWT token
+      operationId: login_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Successful login, returns auth token and user info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Invalid credentials or missing fields
+  /auth/forgot-password:
+    post:
+      summary: Initiate password reset process
+      operationId: forgot_password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordRequest"
+      responses:
+        "200":
+          description: Password reset instructions sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: Invalid request
+  /dashboard:
+    get:
+      summary: Retrieve dashboard metrics for properties
+      operationId: get_dashboard_metrics
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Dashboard metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardResponse"
+        "401":
+          description: Unauthorized
+  /properties:
+    get:
+      summary: Retrieve list of properties with filtering, sorting, and pagination
+      operationId: list_properties
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Search keyword for property title, description, or address
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter by property status (e.g., for_sale, for_rent, sold)
+        - in: query
+          name: property_type
+          schema:
+            type: string
+          description: Filter by type of property (e.g., residential, commercial)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of properties to retrieve
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset for pagination
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+          description: Field by which to sort (e.g., price, created_at)
+        - in: query
+          name: sort_order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: Sort order (ascending or descending)
+      responses:
+        "200":
+          description: List of properties returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyListResponse"
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create a new property record
+      operationId: create_property
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePropertyRequest"
+      responses:
+        "201":
+          description: Property created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyResponse"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized
+  /properties/{property_id}:
+    parameters:
+      - in: path
+        name: property_id
+        required: true
+        schema:
+          type: string
+        description: Unique identifier of the property
+    get:
+      summary: Retrieve detailed information for a specific property
+      operationId: get_property
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Property details returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyResponse"
+        "404":
+          description: Property not found
+    put:
+      summary: Update an existing property record
+      operationId: update_property
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePropertyRequest"
+      responses:
+        "200":
+          description: Property updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyResponse"
+        "400":
+          description: Invalid input data
+        "404":
+          description: Property not found
+    delete:
+      summary: Delete (soft delete) a property record
+      operationId: delete_property
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Property deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Property not found
+  /properties/{property_id}/images:
+    post:
+      summary: Upload a new image for a property
+      operationId: add_property_image
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: property_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the property
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePropertyImageRequest"
+      responses:
+        "201":
+          description: Image added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyImageResponse"
+        "400":
+          description: Invalid input data
+        "404":
+          description: Property not found
+  /properties/{property_id}/images/{image_id}:
+    parameters:
+      - in: path
+        name: property_id
+        required: true
+        schema:
+          type: string
+        description: The ID of the property
+      - in: path
+        name: image_id
+        required: true
+        schema:
+          type: string
+        description: The ID of the image
+    put:
+      summary: Update an existing image of a property
+      operationId: update_property_image
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePropertyImageRequest"
+      responses:
+        "200":
+          description: Image updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyImageResponse"
+        "400":
+          description: Invalid input data
+        "404":
+          description: Image not found
+    delete:
+      summary: Delete an image from a property
+      operationId: delete_property_image
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Image deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Image not found
+  /properties/{property_id}/documents:
+    post:
+      summary: Upload a new document for a property
+      operationId: add_property_document
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: property_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the property
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePropertyDocumentRequest"
+      responses:
+        "201":
+          description: Document added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDocumentResponse"
+        "400":
+          description: Invalid input data
+        "404":
+          description: Property not found
+  /properties/{property_id}/documents/{document_id}:
+    parameters:
+      - in: path
+        name: property_id
+        required: true
+        schema:
+          type: string
+        description: The ID of the property
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          type: string
+        description: The ID of the document
+    put:
+      summary: Update an existing document of a property
+      operationId: update_property_document
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePropertyDocumentRequest"
+      responses:
+        "200":
+          description: Document updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyDocumentResponse"
+        "400":
+          description: Invalid input data
+        "404":
+          description: Document not found
+    delete:
+      summary: Delete a document from a property
+      operationId: delete_property_document
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Document deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Document not found
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      required:
+        - token
+        - user
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+    ForgotPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+    MessageResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    DashboardResponse:
+      type: object
+      properties:
+        total_properties:
+          type: integer
+        for_sale_properties:
+          type: integer
+        for_rent_properties:
+          type: integer
+        sold_properties:
+          type: integer
+        recent_activity:
+          type: array
+          items:
+            type: string
+    PropertyListResponse:
+      type: object
+      properties:
+        properties:
+          type: array
+          items:
+            $ref: "#/components/schemas/Property"
+        total_count:
+          type: integer
+    CreatePropertyRequest:
+      type: object
+      required:
+        - title
+        - description
+        - street
+        - city
+        - state
+        - zip_code
+        - country
+        - price
+        - status
+        - property_type
+        - bedrooms
+        - bathrooms
+        - square_footage
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip_code:
+          type: string
+        country:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        price:
+          type: number
+        status:
+          type: string
+        property_type:
+          type: string
+        bedrooms:
+          type: integer
+        bathrooms:
+          type: integer
+        square_footage:
+          type: integer
+        additional_notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    UpdatePropertyRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip_code:
+          type: string
+        country:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        price:
+          type: number
+        status:
+          type: string
+        property_type:
+          type: string
+        bedrooms:
+          type: integer
+        bathrooms:
+          type: integer
+        square_footage:
+          type: integer
+        additional_notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    Property:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip_code:
+          type: string
+        country:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        price:
+          type: number
+        status:
+          type: string
+        property_type:
+          type: string
+        bedrooms:
+          type: integer
+        bathrooms:
+          type: integer
+        square_footage:
+          type: integer
+        additional_notes:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertyImage"
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertyDocument"
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    CreatePropertyImageRequest:
+      type: object
+      required:
+        - image_url
+      properties:
+        image_url:
+          type: string
+        alt_text:
+          type: string
+        display_order:
+          type: integer
+    UpdatePropertyImageRequest:
+      type: object
+      properties:
+        image_url:
+          type: string
+        alt_text:
+          type: string
+        display_order:
+          type: integer
+    PropertyImage:
+      type: object
+      properties:
+        id:
+          type: string
+        property_id:
+          type: string
+        image_url:
+          type: string
+        alt_text:
+          type: string
+        display_order:
+          type: integer
+        created_at:
+          type: string
+    CreatePropertyDocumentRequest:
+      type: object
+      required:
+        - document_url
+        - document_name
+        - document_type
+      properties:
+        document_url:
+          type: string
+        document_name:
+          type: string
+        document_type:
+          type: string
+    UpdatePropertyDocumentRequest:
+      type: object
+      properties:
+        document_url:
+          type: string
+        document_name:
+          type: string
+        document_type:
+          type: string
+    PropertyDocument:
+      type: object
+      properties:
+        id:
+          type: string
+        property_id:
+          type: string
+        document_url:
+          type: string
+        document_name:
+          type: string
+        document_type:
+          type: string
+        created_at:
+          type: string

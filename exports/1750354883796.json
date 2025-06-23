@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750354883796,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Dashboard",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/vitereact/src/components/views/UV_Dashboard.tsx",
+      "type": "text",
+      "size": 4109,
+      "dependencies": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750355566645,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_PropertyEdit",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/vitereact/src/components/views/UV_PropertyEdit.tsx",
+      "type": "text",
+      "size": 14857,
+      "dependencies": false
+    }
+  ]
+}

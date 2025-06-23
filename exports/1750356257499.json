@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750356257499,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_Notifications",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-properties-management",
+  "files": [
+    {
+      "path": "../../apps/real-estate-properties-management/vitereact/src/components/views/GV_Notifications.tsx",
+      "type": "text",
+      "size": 2247,
+      "dependencies": false
+    }
+  ]
+}
